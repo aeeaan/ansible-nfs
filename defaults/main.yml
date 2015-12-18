@@ -1,0 +1,4 @@
+---
+nfs_server_install: false
+nfs_client_install: true
+nfs_mounts: []

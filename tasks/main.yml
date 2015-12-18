@@ -1,0 +1,14 @@
+---
+- name: install nfs utils
+  yum: name=nfs-utils state=present
+  when: nfs_client_install == true
+
+- name: create local nfs mount points
+  file: path={{ item.mount_point }} state=directory owner=root group=root mode=0755
+  with_items: nfs_mounts
+  when: nfs_mounts is defined and item.mount_point is defined
+
+- name: mount remote nfs shares
+  mount: name={{ item.mount_point }} src={{ item.server }}:{{ item.export_name }} fstype=nfs4 opts=rw,hard,intr,proto=tcp,port=2049 state=mounted
+  with_items: nfs_mounts
+  when: nfs_mounts is defined and item.mount_point is defined and item.export_name is defined and item.server is defined
